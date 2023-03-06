@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-#!/usr/bin/env python3
 """A module for filtering logs."""
 import re
 from typing import List
