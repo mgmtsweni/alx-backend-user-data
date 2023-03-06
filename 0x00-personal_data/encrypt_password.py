@@ -10,7 +10,7 @@ def hash_password(password: str) -> bytes:
 
 
 def is_valid(hashed_password: bytes, password: str) -> bool:
-    """ A function that Use bcrypt to validate that the provided
+    """ A function that Uses bcrypt to validate that the provided
         password matches the hashed password.
     """
     valid = False
