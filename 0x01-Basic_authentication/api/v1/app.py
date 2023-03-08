@@ -32,8 +32,7 @@ def not_found(error) -> str:
 
 @app.errorhandler(401)
 def unauthorized(error) -> str:
-    """ page you were trying to access cannot be loaded 
-        until you first log in with a valid user ID and password.
+    """ Unauthorized handler.
     """
     return jsonify({"error": "Unauthorized"}), 401
 
