@@ -6,6 +6,7 @@ from base64 import b64decode, decode
 from api.v1.auth.auth import Auth
 from models.user import User
 import base64
+import binascii
 
 
 class BasicAuth(Auth):
@@ -14,23 +15,27 @@ class BasicAuth(Auth):
         """ Extract base64 authorization header """
         if auth_header is None or not isinstance(auth_header, str):
             return None
-        if 'Basic ' not in auth_header:
-            return None
-        return auth_header[6:]
+        return None if 'Basic ' not in auth_header else auth_header[6:]
 
-    def decode_base64_authorization_header(self, b64_auth_header: str) -> str:
-        """ Returns decode base64 authorization """
-        if b64_auth_header is None or not isinstance(b64_auth_header, str):
-            return None
-        try:
-            b64 = base64.b64decode(b64_auth_header)
-            base64 = b64.decode('utf-8')
-        except Exception:
-            return None
-        return base64
+    def decode_base64_authorization_header(
+            self,
+            base64_authorization_header: str,
+            ) -> str:
+        """Decodes a base64-encoded authorization header.
+        """
+        if type(base64_authorization_header) == str:
+            try:
+                res = base64.b64decode(
+                    base64_authorization_header,
+                    validate=True,
+                )
+                return res.decode('utf-8')
+            except (binascii.Error, UnicodeDecodeError):
+                return None
 
+  
     def extract_user_credentials(
-            self, decoded_b64_auth_header: str) -> (str, str):
+            self, decoded_b64_auth_header: str) -> Tuple[str, str]:
         """ Returns credentials """
         if decoded_b64_auth_header is None or not isinstance(
                 decoded_b64_auth_header, str) \
@@ -50,9 +55,7 @@ class BasicAuth(Auth):
         except Exception:
             return None
         for user in users:
-            if user.is_valid_password(user_pwd):
-                return user
-            return None
+            return user if user.is_valid_password(user_pwd) else None
 
 
 def current_user(self, request=None) -> TypeVar('User'):
