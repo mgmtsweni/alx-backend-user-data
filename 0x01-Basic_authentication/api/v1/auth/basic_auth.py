@@ -33,7 +33,6 @@ class BasicAuth(Auth):
             except (binascii.Error, UnicodeDecodeError):
                 return None
 
-  
     def extract_user_credentials(
             self, decoded_b64_auth_header: str) -> Tuple[str, str]:
         """ Returns credentials """
